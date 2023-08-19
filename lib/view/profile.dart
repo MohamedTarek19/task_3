@@ -18,7 +18,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 2)).then((value) async {
+    Future.delayed(const Duration(seconds: 2)).then((value) async {
       userData =  await FirebaseFirestore.instance.collection('Users').doc('${user?.uid}').get();
       setState(() {
         if(userData != null){
@@ -55,6 +55,6 @@ class _ProfileState extends State<Profile> {
           ],
         ),
       ),
-    ): CircularProgressIndicator();
+    ): Center(child: const CircularProgressIndicator());
   }
 }
