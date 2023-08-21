@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/cubit_app_status.dart';
+import 'package:task_3/dataCubit/my_app_cubit.dart';
 import 'package:task_3/main.dart';
 import 'package:task_3/view/first_screen.dart';
 import 'package:task_3/view/signup.dart';
@@ -7,35 +10,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
 
-
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
   final _formKey = GlobalKey<FormState>();
   TextEditingController Email = TextEditingController();
   TextEditingController Password = TextEditingController();
   bool obsecureFlag = true;
-
-  Future<void> login(String Email,String Password,BuildContext context) async{
-    if(_formKey.currentState!.validate()){
-      try{
-        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: Email,
-            password: Password
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Successfull!!!!!')),);
-        if(credential.user != null){
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) {
-                return MyHomePage(title: 'Home',);
-              }), (value)=> false);
-        }
-      }catch(e){
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +25,7 @@ class Login extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black, // <-- SEE HERE
         ),
         centerTitle: true,
@@ -61,7 +41,6 @@ class Login extends StatelessWidget {
         ),
       ),
       body: Container(
-
         width: width,
         margin: const EdgeInsets.only(left: 25, right: 25),
         child: Form(
@@ -72,6 +51,7 @@ class Login extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FormFieldTemplate(
+                      iconButton: const Icon(Icons.email),
                       obsecureFlag: false,
                       type: TextInputType.emailAddress,
                       mrgin: 20,
@@ -89,15 +69,20 @@ class Login extends StatelessWidget {
                         return null;
                       }),
                   StatefulBuilder(
-                    builder: (BuildContext context, void Function(void Function()) setState) {
+                    builder: (BuildContext context,
+                        void Function(void Function()) setState) {
                       return FormFieldTemplate(
                           obsecureFlag: obsecureFlag,
                           iconButton: IconButton(
                             onPressed: () {
-                              setState((){
+                              setState(() {
                                 obsecureFlag = !obsecureFlag;
                               });
-                            }, icon: Icon(obsecureFlag == true?Icons.visibility:Icons.visibility_off),),
+                            },
+                            icon: Icon(obsecureFlag == true
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
                           type: TextInputType.visiblePassword,
                           mrgin: 40,
                           controller: Password,
@@ -112,34 +97,67 @@ class Login extends StatelessWidget {
                           });
                     },
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        elevation: 10,
-                        minimumSize: Size((width * 0.3), height * 0.06),
-                        maximumSize: Size((width * 0.35), height * 0.9),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20))
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await login(Email.text,Password.text,context);
-
+                  BlocConsumer<AppCubit, AppState>(
+                    listener: (context, state) {
+                      if (state is onLoginSuccess) {
+                        WidgetsBinding.instance.addPostFrameCallback((_){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return MyHomePage(title: 'home',);
+                              }));
+                        });
+                      } else if (state is onLoginError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.error.toString())),
+                        );
                       }
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Icon(Icons.login),
-                        Text('login'),
-                      ],
-                    ),
+                    builder: (context, state) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 10,
+                            minimumSize: Size((width * 0.3), height * 0.06),
+                            maximumSize: Size((width * 0.35), height * 0.06),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await context
+                                .read<AppCubit>()
+                                .login(Email.text, Password.text);
+                          }
+                        },
+                        child: state is onLoginLoading
+                            ? const Padding(
+                                padding: EdgeInsets.only(
+                                    top: 10, bottom: 10, left: 30, right: 30),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Icon(Icons.login),
+                                  Text('login'),
+                                ],
+                              ),
+                      );
+                    },
                   ),
                   SizedBox(
-                    height: height*0.02,
+                    height: height * 0.02,
                   ),
-                  Text('Or u can just',style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
+                  const Text(
+                    'Or u can just',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(
-                    height: height*0.02,
+                    height: height * 0.02,
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -147,13 +165,12 @@ class Login extends StatelessWidget {
                         minimumSize: Size((width * 0.3), height * 0.06),
                         maximumSize: Size((width * 0.35), height * 0.9),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20))
-                    ),
+                            borderRadius: BorderRadius.circular(20))),
                     onPressed: () {
-                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
                         return SignUp();
                       }));
-
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

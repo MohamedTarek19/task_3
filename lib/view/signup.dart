@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_3/main.dart';
-import 'package:task_3/view/auth_screen.dart';
+import 'package:task_3/view/login_screen.dart';
 import 'package:task_3/view/first_screen.dart';
 import 'package:task_3/widgets/form_field_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
