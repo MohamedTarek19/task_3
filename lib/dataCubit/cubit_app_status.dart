@@ -16,3 +16,17 @@ class onLoginError extends AppState{
   onLoginError({required this.error});
   String error;
 }
+
+class onSignUpLoading extends AppState{}
+class onSignUpSuccess extends AppState{}
+class onCreateAccError extends AppState{
+  onCreateAccError({required this.error});
+  String error;
+}
+class onSignUpError extends AppState{
+  onSignUpError({required this.error});
+  String error;
+}
+
+
+

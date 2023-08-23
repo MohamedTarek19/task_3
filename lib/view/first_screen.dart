@@ -8,12 +8,10 @@ import 'package:task_3/widgets/item.dart';
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
 
-  List<bool>? flag;
   @override
   Widget build(BuildContext context) {
-    flag =
-        List<bool>.filled(context.read<AppCubit>().products?.length ?? 0, false, growable: true);
-    print('##########[${flag?.length}]##############');
+
+    print('##########[${context.read<AppCubit>().flag?.length}]##############');
     return BlocBuilder<AppCubit, AppState>(
       builder: (context, state) {
         return GridView.builder(
@@ -32,7 +30,7 @@ class Home extends StatelessWidget {
                     return InkWell(
                       onTap: () {
                         setState(() {
-                          flag?[index] = !flag![index];
+                          context.read<AppCubit>().flag?[index] = !context.read<AppCubit>().flag![index];
                         });
                       },
                       child: Item(
@@ -40,7 +38,7 @@ class Home extends StatelessWidget {
                         itemDesc: context.read<AppCubit>().products?[index].description,
                         itemPrice: context.read<AppCubit>().products?[index].price?.toDouble(),
                         itemPath: context.read<AppCubit>().products?[index].thumbnail,
-                        itemfav: flag?[index] ?? false,
+                        itemfav: context.read<AppCubit>().flag?[index] ?? false,
                       ),
                     );
                   },

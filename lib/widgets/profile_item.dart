@@ -13,36 +13,31 @@ class TextView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+      margin: const EdgeInsets.only(top: 20,left: 15, right: 15,),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
           Material(
             elevation: 5,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Container(
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: MediaQuery.of(context).size.height * 0.1,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
+                  border: Border.all(color: Colors.black),
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(20)),
                 child: Center(
                     child: Container(
-                        margin: const EdgeInsets.only(left: 5, right: 5),
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(left: 0, right: 5),
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Text(
-                              textval,
+                              '${title}  ${textval}',
                               style: TextStyle(
-                                  fontSize: 25, color: Colors.grey[700]),
+                                  fontSize: 18, color: Colors.black),
                             ))))),
           ),
         ],

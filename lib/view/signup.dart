@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/main.dart';
 import 'package:task_3/view/login_screen.dart';
 import 'package:task_3/view/first_screen.dart';
 import 'package:task_3/widgets/form_field_template.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import '../dataCubit/my_app_cubit.dart';
 import '../firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -38,17 +41,16 @@ class SignUp extends StatelessWidget {
             }, SetOptions(merge: true));
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (BuildContext context) {
-                  return MyHomePage(
-                    title: 'Home',
-                  );
-                }), ModalRoute.withName('/'));
+              return MyHomePage(
+                title: 'Home',
+              );
+            }), ModalRoute.withName('/'));
           } catch (e) {
             print(e);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(e.toString())),
             );
           }
-
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -171,24 +173,62 @@ class SignUp extends StatelessWidget {
                           });
                     },
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        elevation: 10,
-                        minimumSize: Size((width * 0.3), height * 0.06),
-                        maximumSize: Size((width * 0.35), height * 0.9),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20))),
-                    onPressed: () async {
-                      await signUp(Email.text, Password.text, Phone.text,
-                          name.text, context);
+                  BlocConsumer<AppCubit, AppState>(
+                    listener: (context, state) {
+                      if (state is onSignUpSuccess) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return MyHomePage(
+                            title: 'Home',
+                          );
+                        }), ModalRoute.withName('/'));
+                      } else if (state is onSignUpError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text('SignUp Error:  ${state.error}')),
+                        );
+                      } else if (state is onCreateAccError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Creating Account Error:  ${state.error}')),
+                        );
+                      }
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        Icon(Icons.save),
-                        Text('Sign Up'),
-                      ],
-                    ),
+                    builder: (context, state) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 10,
+                            minimumSize: Size((width * 0.3), height * 0.06),
+                            maximumSize: Size((width * 0.35), height * 0.06),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await context.read<AppCubit>().signUp(Email.text,
+                                Password.text, Phone.text, name.text);
+                          }
+                        },
+                        child: state is onSignUpLoading
+                            ? const Padding(
+                                padding: EdgeInsets.only(
+                                    top: 10, bottom: 10, left: 35, right: 35),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  Icon(Icons.save),
+                                  Text('Sign Up'),
+                                ],
+                              ),
+                      );
+                    },
                   ),
                 ],
               ),

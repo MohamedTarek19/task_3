@@ -101,9 +101,9 @@ class Login extends StatelessWidget {
                     listener: (context, state) {
                       if (state is onLoginSuccess) {
                         WidgetsBinding.instance.addPostFrameCallback((_){
-                          Navigator.push(context,
+                          Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) {
-                                return MyHomePage(title: 'home',);
+                                return MyHomePage(title: 'Home',);
                               }));
                         });
                       } else if (state is onLoginError) {
@@ -130,7 +130,7 @@ class Login extends StatelessWidget {
                         child: state is onLoginLoading
                             ? const Padding(
                                 padding: EdgeInsets.only(
-                                    top: 10, bottom: 10, left: 30, right: 30),
+                                    top: 10, bottom: 10, left: 35, right: 35),
                                 child: Center(
                                   child: CircularProgressIndicator(
                                     color: Colors.white,
