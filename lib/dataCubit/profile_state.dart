@@ -14,3 +14,4 @@ class onGettingDataError extends ProfileState{
 
 class PickImageSuccess extends ProfileState {}
 class PickImageLoading extends ProfileState {}
+class PickWithNull extends ProfileState {}

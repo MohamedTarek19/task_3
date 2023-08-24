@@ -17,7 +17,9 @@ class Profile extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         child: BlocConsumer<ProfileCubit, ProfileState>(
-          listener: (context, state) async {},
+          listener: (context, state) async {
+            print(context.read<ProfileCubit>().Data?.image.isEmpty);
+          },
           builder: (context, state) {
             print(" state is ${state}");
             if (state is onGettingDataLoading) {
@@ -25,7 +27,7 @@ class Profile extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (state is onGettingDataSuccess ||
-                state is PickImageSuccess) {
+                state is PickImageSuccess || state is PickWithNull?) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,15 +53,12 @@ class Profile extends StatelessWidget {
                             color: Colors.white,
                             image: DecorationImage(
                               fit: BoxFit.fill,
-                              image: state is PickImageSuccess
-                                  ? FileImage(context.read<ProfileCubit>().img!)
-                                  : context.read<ProfileCubit>().Data?.image != '' ||
-                                          context.read<ProfileCubit>().Data?.image != null
-                                      ? NetworkImage(context.read<ProfileCubit>().Data?.image ?? '')
-                                      : const AssetImage('assets/images/avatar.jpg',) as ImageProvider,
+                              image: (state is PickImageSuccess)
+                                  ? (FileImage(context.read<ProfileCubit>().img!))
+                                  : (context.read<ProfileCubit>().Data?.image != '' || context.read<ProfileCubit>().Data?.image != null)
+                                      ? const AssetImage('assets/images/avatar.jpg',) as ImageProvider:NetworkImage(context.read<ProfileCubit>().Data?.image ?? ''),
                             ),
                             shape: BoxShape.circle),
-                        child: state is PickImageLoading || state is onGettingDataLoading? Center(child: CircularProgressIndicator(),): Container(),
                       ),
                       Positioned(
                         top: MediaQuery.of(context).size.height * 0.15,

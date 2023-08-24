@@ -50,16 +50,22 @@ class ProfileCubit extends Cubit<ProfileState> {
   File? img;
 
   Future<void> pickImage() async {
-    emit(PickImageLoading());
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      img = File(image.path);
-      await uploadImageToUserData(File(image.path));
-      print('######################[${img}]##################');
-      emit(PickImageSuccess());
-    } else {
-      print('null image');
+    try{
+      emit(PickImageLoading());
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        img = File(image.path);
+        await uploadImageToUserData(File(image.path));
+        print('######################[${img}]##################');
+        emit(PickImageSuccess());
+      } else {
+        emit(PickWithNull());
+        print('null image');
+      }
+    }catch(e){
+
     }
+
   }
 
   Future<void> uploadImageToUserData(File image) async {
