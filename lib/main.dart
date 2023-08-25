@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/dataCubit/my_app_cubit.dart';
@@ -18,13 +19,15 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black, // navigation bar color
+    statusBarColor: Colors.white, // status bar color
+  ));
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<AppCubit>(
         create: (context) => AppCubit()..getProductsList(),
       ),
-      BlocProvider<ProfileCubit>(
-      create: (context) => (ProfileCubit()..GetData()),),
     ],
     child: MyApp(),
   ));
