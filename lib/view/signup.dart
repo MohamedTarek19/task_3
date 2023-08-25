@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/auth_cubit.dart';
 import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/main.dart';
 import 'package:task_3/view/login_screen.dart';
@@ -173,7 +174,7 @@ class SignUp extends StatelessWidget {
                           });
                     },
                   ),
-                  BlocConsumer<AppCubit, AppState>(
+                  BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is onSignUpSuccess) {
                         Navigator.of(context).pushAndRemoveUntil(
@@ -205,7 +206,7 @@ class SignUp extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20))),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            await context.read<AppCubit>().signUp(Email.text,
+                            await context.read<AuthCubit>().signUp(Email.text,
                                 Password.text, Phone.text, name.text);
                           }
                         },

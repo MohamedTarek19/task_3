@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/auth_cubit.dart';
 import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/dataCubit/my_app_cubit.dart';
 import 'package:task_3/main.dart';
@@ -97,7 +98,7 @@ class Login extends StatelessWidget {
                           });
                     },
                   ),
-                  BlocConsumer<AppCubit, AppState>(
+                  BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is onLoginSuccess) {
                         WidgetsBinding.instance.addPostFrameCallback((_){
@@ -123,7 +124,7 @@ class Login extends StatelessWidget {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             await context
-                                .read<AppCubit>()
+                                .read<AuthCubit>()
                                 .login(Email.text, Password.text);
                           }
                         },

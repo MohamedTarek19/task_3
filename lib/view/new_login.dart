@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/auth_cubit.dart';
 import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/dataCubit/my_app_cubit.dart';
+import 'package:task_3/helper.dart';
 import 'package:task_3/main.dart';
 import 'package:task_3/view/new_signup.dart';
 import 'package:task_3/view/signup.dart';
@@ -23,8 +25,6 @@ class NewLoginScreen extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-
-
         body: Container(
           color: Colors.white,
           width: MediaQuery.of(context).size.width,
@@ -104,7 +104,7 @@ class NewLoginScreen extends StatelessWidget {
 
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        BlocConsumer<AppCubit, AppState>(
+                        BlocConsumer<AuthCubit, AuthState>(
                           listener: (context, state) {
                             if (state is onLoginSuccess) {
                               WidgetsBinding.instance
@@ -146,9 +146,10 @@ class NewLoginScreen extends StatelessWidget {
                                 if (_formKey.currentState!
                                     .validate()) {
                                   await context
-                                      .read<AppCubit>()
+                                      .read<AuthCubit>()
                                       .login(
                                       Email.text, Password.text);
+
                                 }
                               },
                               child: state is onLoginLoading

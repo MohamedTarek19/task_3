@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/auth_cubit.dart';
 import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/dataCubit/my_app_cubit.dart';
 import 'package:task_3/dataCubit/profile_cubit.dart';
@@ -23,14 +24,10 @@ Future<void> main() async {
     systemNavigationBarColor: Colors.black, // navigation bar color
     statusBarColor: Colors.white, // status bar color
   ));
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider<AppCubit>(
-        create: (context) => AppCubit()..getProductsList(),
-      ),
-    ],
-    child: MyApp(),
-  ));
+  runApp(BlocProvider<AuthCubit>(
+  create: (context) => AuthCubit(),
+  child: MyApp(),
+));
 }
 
 class MyApp extends StatelessWidget {
@@ -97,7 +94,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MultiBlocProvider(
+  providers: [
+    BlocProvider<AppCubit>(
+      create: (context) => AppCubit()..getProductsList(),
+),
+    BlocProvider<ProfileCubit>(
+      create: (context) => (ProfileCubit()..GetData()),
+    ),
+  ],
+  child: Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -174,6 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-    );
+    ),
+);
   }
 }

@@ -41,52 +41,7 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
-  Future<void> login(String Email, String Password) async {
-    try {
-      emit(onLoginLoading());
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: Email, password: Password);
-      if (credential.user != null) {
-        emit(onLoginSuccess());
 
-      }
-    } catch (e) {
-      emit(onLoginError(error: e.toString()));
-    }
-  }
-
-
-  Future<void> signUp(String email, String pass, String phone, String name) async {
-    try {
-      emit(onSignUpLoading());
-
-      var cred = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: pass);
-      var db;
-      if (cred.user != null) {
-        try {
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc('${cred.user?.uid}')
-              .set({
-            'name': '${name}',
-            'phone': '${phone}',
-            'email': '${email}',
-            'password': '${pass}',
-            'uid': '${cred.user?.uid}',
-            'image': '',
-          }, SetOptions(merge: true));
-          emit(onSignUpSuccess());
-
-        } catch (e) {
-          emit(onSignUpError(error: e.toString()));
-        }
-
-      }
-    } catch (e) {
-      emit(onCreateAccError(error: e.toString()));
-    }
-  }
 
 }
 

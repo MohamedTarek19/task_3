@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_3/dataCubit/auth_cubit.dart';
 import 'package:task_3/dataCubit/cubit_app_status.dart';
 import 'package:task_3/dataCubit/my_app_cubit.dart';
 import 'package:task_3/main.dart';
@@ -151,7 +152,7 @@ class NewSignUpScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        BlocConsumer<AppCubit, AppState>(
+                        BlocConsumer<AuthCubit, AuthState>(
                           listener: (context, state) {
                             if (state is onSignUpSuccess) {
                               Navigator.of(context)
@@ -201,7 +202,7 @@ class NewSignUpScreen extends StatelessWidget {
                                 if (_formKey.currentState!
                                     .validate()) {
                                   await context
-                                      .read<AppCubit>()
+                                      .read<AuthCubit>()
                                       .signUp(Email.text,
                                       Password.text,Phone.text,name.text);
                                 }

@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:task_3/api/personal_data.dart';
+import 'package:task_3/helper.dart';
 
 part 'profile_state.dart';
 
@@ -16,34 +17,39 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   UserDataModel? Data;
 
+
   Future<void> GetData() async{
-    String? uid = FirebaseAuth.instance.currentUser!.uid;
-    DocumentSnapshot? userData;
-    try {
-      print('#########################getting Data#########################');
-      emit(onGettingDataLoading());
-      print('###############${onGettingDataLoading()}##################');
-      userData = await FirebaseFirestore.instance
-          .collection('Users')
-          .doc('${uid}')
-          .get();
-      if (userData != null) {
-        Data = UserDataModel( name: userData['name'],
-            password: userData['password'],
-            phone: userData['phone'],
-            email: userData['email'],
-            uid: userData['uid'],
-            image: userData['image']);
-        print('###############${Data?.name}##################');
-        emit(onGettingDataSuccess());
-        print('###############${onGettingDataSuccess()}##################');
 
+      print('in get data');
+      String? uid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot? userData;
+      try {
+        print('#########################getting Data#########################');
+        emit(onGettingDataLoading());
+        print('###############${onGettingDataLoading()}##################');
+        userData = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc('${uid}')
+            .get();
+        if (userData != null) {
+          Data = UserDataModel(
+              name: userData['name'],
+              password: userData['password'],
+              phone: userData['phone'],
+              email: userData['email'],
+              uid: userData['uid'],
+              image: userData['image']);
+          print('###############${Data?.name}##################');
 
+          emit(onGettingDataSuccess());
+          print('###############${onGettingDataSuccess()}##################');
+        }
+      } catch (e) {
+        print(
+            '###############${onGettingDataError(error: e.toString())}##################');
+        emit(onGettingDataError(error: e.toString()));
       }
-    }catch(e){
-      print('###############${onGettingDataError(error: e.toString())}##################');
-      emit(onGettingDataError(error: e.toString()));
-    }
+
   }
 
   ImagePicker picker = ImagePicker();
