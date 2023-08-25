@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: const MaterialColor(
-          0xff0e108d, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
+          0xff31004a, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
           <int, Color>{
-            50: Color(0xff0e1050 ),//10%
+            50: Color(0xff31004a),//10%
             100: Color(0xffb74c3a),//20%
             200: Color(0xffa04332),//30%
             300: Color(0xff89392b),//40%
@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
             blurRadius: 7,
             offset: const Offset(0, 3), // changes position of shadow
           ),
-        ], color: Colors.deepPurple[900],
+        ], color: Color(0xff31004a),
             borderRadius: BorderRadius.circular(40)),
         child: BottomNavigationBar(
           selectedItemColor: Colors.white,

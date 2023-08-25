@@ -57,7 +57,7 @@ class Item extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.3,
                     height: MediaQuery.of(context).size.height * 0.04,
                     decoration: const BoxDecoration(
-                      color: Colors.purple,
+                      color: Color(0xff310045),
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10)),

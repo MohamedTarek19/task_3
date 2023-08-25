@@ -130,7 +130,7 @@ class NewLoginScreen extends StatelessWidget {
                             return ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                  Colors.deepPurple[800],
+                                  Color(0xff310045),
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                       BorderRadius.circular(10)),
